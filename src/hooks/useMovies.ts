@@ -19,7 +19,7 @@ export const useMovies = () => {
   return useQuery({
     queryKey: ['movies'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('movies')
         .select('*')
         .eq('is_active', true)
