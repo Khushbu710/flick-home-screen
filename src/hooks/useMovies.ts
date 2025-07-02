@@ -19,13 +19,14 @@ export const useMovies = () => {
   return useQuery({
     queryKey: ['movies'],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('movies')
         .select('*')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Error fetching movies:', error);
         throw new Error(error.message);
       }
 
