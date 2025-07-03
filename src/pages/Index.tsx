@@ -6,11 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Calendar, Loader2 } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
-import { useMovies } from '@/hooks/useMovies';
+import { useMovies, Movie } from '@/hooks/useMovies';
 import UserButton from '@/components/UserButton';
+import MovieBooking from '@/components/MovieBooking';
 
 const Index = () => {
   const [selectedGenre, setSelectedGenre] = useState("All");
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const { user, loading: authLoading } = useAuth();
   const { data: movies, isLoading: moviesLoading } = useMovies();
   const navigate = useNavigate();
@@ -23,6 +26,16 @@ const Index = () => {
 
   // Show featured movies (first 3)
   const featuredMovies = movies?.slice(0, 3) || [];
+
+  const handleBookNow = (movie: Movie) => {
+    setSelectedMovie(movie);
+    setIsBookingOpen(true);
+  };
+
+  const handleCloseBooking = () => {
+    setIsBookingOpen(false);
+    setSelectedMovie(null);
+  };
 
   if (authLoading) {
     return (
@@ -92,7 +105,11 @@ const Index = () => {
                         ))}
                       </div>
                       <p className="text-xs text-white/80 mb-2">{movie.duration} min</p>
-                      <Button size="sm" className="bg-red-600 hover:bg-red-700">
+                      <Button 
+                        size="sm" 
+                        className="bg-red-600 hover:bg-red-700"
+                        onClick={() => handleBookNow(movie)}
+                      >
                         Book Now
                       </Button>
                     </CardContent>
@@ -159,7 +176,11 @@ const Index = () => {
                       <Calendar className="h-3 w-3 mr-1" />
                       <span>{movie.language} • {movie.duration} min</span>
                     </div>
-                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white" size="sm">
+                    <Button 
+                      className="w-full bg-red-600 hover:bg-red-700 text-white" 
+                      size="sm"
+                      onClick={() => handleBookNow(movie)}
+                    >
                       Book Now
                     </Button>
                   </CardContent>
@@ -183,6 +204,13 @@ const Index = () => {
           <p className="text-gray-400 text-sm">Your ultimate destination for movie bookings</p>
         </div>
       </footer>
+
+      {/* Movie Booking Modal */}
+      <MovieBooking 
+        movie={selectedMovie}
+        isOpen={isBookingOpen}
+        onClose={handleCloseBooking}
+      />
     </div>
   );
 };

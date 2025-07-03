@@ -54,6 +54,90 @@ export type Database = {
         }
         Relationships: []
       }
+      showtimes: {
+        Row: {
+          available_seats: number
+          created_at: string | null
+          id: string
+          movie_id: string
+          price: number
+          show_date: string
+          show_time: string
+          theater_id: string
+          total_seats: number
+          updated_at: string | null
+        }
+        Insert: {
+          available_seats?: number
+          created_at?: string | null
+          id?: string
+          movie_id: string
+          price: number
+          show_date: string
+          show_time: string
+          theater_id: string
+          total_seats?: number
+          updated_at?: string | null
+        }
+        Update: {
+          available_seats?: number
+          created_at?: string | null
+          id?: string
+          movie_id?: string
+          price?: number
+          show_date?: string
+          show_time?: string
+          theater_id?: string
+          total_seats?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "showtimes_movie_id_fkey"
+            columns: ["movie_id"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "showtimes_theater_id_fkey"
+            columns: ["theater_id"]
+            isOneToOne: false
+            referencedRelation: "theaters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theaters: {
+        Row: {
+          address: string
+          city: string
+          created_at: string | null
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          city?: string
+          created_at?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
