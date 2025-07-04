@@ -10,6 +10,8 @@ import { useTheaters } from '@/hooks/useTheaters';
 import { Movie } from '@/hooks/useMovies';
 import { format } from 'date-fns';
 import SeatSelection from './SeatSelection';
+import PaymentForm from './PaymentForm';
+import BookingConfirmation from './BookingConfirmation';
 
 interface MovieBookingProps {
   movie: Movie | null;
@@ -17,11 +19,15 @@ interface MovieBookingProps {
   onClose: () => void;
 }
 
+type BookingStep = 'showtimes' | 'seats' | 'payment' | 'confirmation';
+
 const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
+  const [bookingStep, setBookingStep] = useState<BookingStep>('showtimes');
   const [ticketCount, setTicketCount] = useState(1);
   const [selectedShowtime, setSelectedShowtime] = useState<any>(null);
   const [selectedTheater, setSelectedTheater] = useState<any>(null);
-  const [showSeatSelection, setShowSeatSelection] = useState(false);
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [bookingReference, setBookingReference] = useState<string>('');
   
   const { data: theaters, isLoading: theatersLoading } = useTheaters();
   const { data: showtimes, isLoading: showtimesLoading } = useShowtimes(movie?.id);
@@ -48,37 +54,44 @@ const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
   const handleShowtimeSelect = (showtime: any, theater: any) => {
     setSelectedShowtime(showtime);
     setSelectedTheater(theater);
-    setShowSeatSelection(true);
+    setBookingStep('seats');
   };
 
   const handleBackToShowtimes = () => {
-    setShowSeatSelection(false);
+    setBookingStep('showtimes');
     setSelectedShowtime(null);
     setSelectedTheater(null);
+    setSelectedSeats([]);
   };
 
-  const handleSeatConfirm = (selectedSeats: string[]) => {
-    console.log('Confirmed seats:', selectedSeats);
-    console.log('Theater:', selectedTheater);
-    console.log('Showtime:', selectedShowtime);
-    console.log('Movie:', movie);
-    // Here you would typically proceed to payment or booking confirmation
-    alert(`Seats ${selectedSeats.join(', ')} selected for ${movie.title}`);
-    onClose();
+  const handleSeatConfirm = (seats: string[]) => {
+    setSelectedSeats(seats);
+    setBookingStep('payment');
+  };
+
+  const handleBackToSeats = () => {
+    setBookingStep('seats');
+  };
+
+  const handlePaymentSuccess = (reference: string) => {
+    setBookingReference(reference);
+    setBookingStep('confirmation');
   };
 
   const handleClose = () => {
-    setShowSeatSelection(false);
+    setBookingStep('showtimes');
     setSelectedShowtime(null);
     setSelectedTheater(null);
+    setSelectedSeats([]);
+    setBookingReference('');
     setTicketCount(1);
     onClose();
   };
 
-  return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-        {showSeatSelection && selectedShowtime && selectedTheater ? (
+  const renderContent = () => {
+    switch (bookingStep) {
+      case 'seats':
+        return (
           <SeatSelection
             movie={movie}
             theater={selectedTheater}
@@ -87,7 +100,31 @@ const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
             onBack={handleBackToShowtimes}
             onConfirm={handleSeatConfirm}
           />
-        ) : (
+        );
+      case 'payment':
+        return (
+          <PaymentForm
+            movie={movie}
+            theater={selectedTheater}
+            showtime={selectedShowtime}
+            selectedSeats={selectedSeats}
+            onBack={handleBackToSeats}
+            onSuccess={handlePaymentSuccess}
+          />
+        );
+      case 'confirmation':
+        return (
+          <BookingConfirmation
+            movie={movie}
+            theater={selectedTheater}
+            showtime={selectedShowtime}
+            selectedSeats={selectedSeats}
+            bookingReference={bookingReference}
+            onClose={handleClose}
+          />
+        );
+      default:
+        return (
           <>
             <DialogHeader>
               <DialogTitle className="text-xl md:text-2xl">
@@ -202,7 +239,14 @@ const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
               </div>
             )}
           </>
-        )}
+        );
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        {renderContent()}
       </DialogContent>
     </Dialog>
   );

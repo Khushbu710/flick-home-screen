@@ -9,6 +9,73 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_reference: string
+          created_at: string | null
+          id: string
+          movie_id: string | null
+          payment_method: string
+          payment_status: string
+          selected_seats: string[]
+          showtime_id: string | null
+          theater_id: string | null
+          total_amount: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          booking_reference: string
+          created_at?: string | null
+          id?: string
+          movie_id?: string | null
+          payment_method: string
+          payment_status?: string
+          selected_seats: string[]
+          showtime_id?: string | null
+          theater_id?: string | null
+          total_amount: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          booking_reference?: string
+          created_at?: string | null
+          id?: string
+          movie_id?: string | null
+          payment_method?: string
+          payment_status?: string
+          selected_seats?: string[]
+          showtime_id?: string | null
+          theater_id?: string | null
+          total_amount?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_movie_id_fkey"
+            columns: ["movie_id"]
+            isOneToOne: false
+            referencedRelation: "movies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_showtime_id_fkey"
+            columns: ["showtime_id"]
+            isOneToOne: false
+            referencedRelation: "showtimes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_theater_id_fkey"
+            columns: ["theater_id"]
+            isOneToOne: false
+            referencedRelation: "theaters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       movies: {
         Row: {
           created_at: string | null
