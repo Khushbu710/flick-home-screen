@@ -1,11 +1,16 @@
 
 import { Button } from "@/components/ui/button";
-import { MapPin } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import UserButton from '@/components/UserButton';
+import LocationSelector from '@/components/LocationSelector';
 
-const Header = () => {
+interface HeaderProps {
+  selectedLocation?: string;
+  onLocationSelect?: (location: string) => void;
+}
+
+const Header = ({ selectedLocation = "Mumbai", onLocationSelect }: HeaderProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -15,10 +20,10 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-bold text-red-600">BookMyShow</h1>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-sm">
-              <MapPin className="h-4 w-4" />
-              <span>Mumbai</span>
-            </div>
+            <LocationSelector 
+              selectedLocation={selectedLocation}
+              onLocationSelect={onLocationSelect || (() => {})}
+            />
             {user ? (
               <UserButton />
             ) : (

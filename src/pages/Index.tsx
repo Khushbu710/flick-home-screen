@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
-import { useMovies, Movie } from '@/hooks/useMovies';
+import { useMoviesByLocation } from '@/hooks/useMoviesByLocation';
+import { Movie } from '@/hooks/useMovies';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import MovieGrid from '@/components/MovieGrid';
@@ -13,8 +14,9 @@ const Index = () => {
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("Mumbai");
   const { loading: authLoading } = useAuth();
-  const { data: movies, isLoading: moviesLoading } = useMovies();
+  const { data: movies, isLoading: moviesLoading } = useMoviesByLocation(selectedLocation);
 
   const handleBookNow = (movie: Movie) => {
     setSelectedMovie(movie);
@@ -24,6 +26,10 @@ const Index = () => {
   const handleCloseBooking = () => {
     setIsBookingOpen(false);
     setSelectedMovie(null);
+  };
+
+  const handleLocationSelect = (location: string) => {
+    setSelectedLocation(location);
   };
 
   if (authLoading) {
@@ -36,7 +42,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header 
+        selectedLocation={selectedLocation}
+        onLocationSelect={handleLocationSelect}
+      />
       
       <HeroSection 
         movies={movies || []}
@@ -50,6 +59,7 @@ const Index = () => {
         selectedGenre={selectedGenre}
         onGenreSelect={setSelectedGenre}
         onBookNow={handleBookNow}
+        selectedLocation={selectedLocation}
       />
 
       <Footer />
@@ -58,6 +68,7 @@ const Index = () => {
         movie={selectedMovie}
         isOpen={isBookingOpen}
         onClose={handleCloseBooking}
+        selectedLocation={selectedLocation}
       />
     </div>
   );

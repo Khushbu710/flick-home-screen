@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,23 +5,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, MapPin, Clock, Users, IndianRupee, Plus, Minus } from "lucide-react";
 import { useShowtimes } from '@/hooks/useShowtimes';
-import { useTheaters } from '@/hooks/useTheaters';
+import { useTheatersByLocation } from '@/hooks/useTheatersByLocation';
 import { Movie } from '@/hooks/useMovies';
 import { format, isSameDay } from 'date-fns';
 import SeatSelection from './SeatSelection';
 import PaymentForm from './PaymentForm';
 import BookingConfirmation from './BookingConfirmation';
-import DateSelector from './DateSelector';
+import CalendarDatePicker from './CalendarDatePicker';
 
 interface MovieBookingProps {
   movie: Movie | null;
   isOpen: boolean;
   onClose: () => void;
+  selectedLocation: string;
 }
 
 type BookingStep = 'showtimes' | 'seats' | 'payment' | 'confirmation';
 
-const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
+const MovieBooking = ({ movie, isOpen, onClose, selectedLocation }: MovieBookingProps) => {
   const [bookingStep, setBookingStep] = useState<BookingStep>('showtimes');
   const [ticketCount, setTicketCount] = useState(1);
   const [selectedShowtime, setSelectedShowtime] = useState<any>(null);
@@ -31,27 +31,31 @@ const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
   const [bookingReference, setBookingReference] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   
-  const { data: theaters, isLoading: theatersLoading } = useTheaters();
+  const { data: theaters, isLoading: theatersLoading } = useTheatersByLocation(selectedLocation);
   const { data: showtimes, isLoading: showtimesLoading } = useShowtimes(movie?.id);
 
   if (!movie) return null;
 
-  // Filter showtimes for selected date
+  // Filter showtimes for selected date and location
   const filteredShowtimes = showtimes?.filter(showtime => 
     isSameDay(new Date(showtime.show_date), selectedDate)
   ) || [];
 
-  // Group showtimes by theater
+  // Group showtimes by theater (only theaters in selected location)
   const showtimesByTheater = filteredShowtimes.reduce((acc, showtime) => {
     const theaterId = showtime.theater_id;
-    if (!acc[theaterId]) {
+    // Only include theaters from the selected location
+    const theater = theaters?.find(t => t.id === theaterId);
+    if (theater && !acc[theaterId]) {
       acc[theaterId] = [];
     }
-    acc[theaterId].push(showtime);
+    if (theater) {
+      acc[theaterId].push(showtime);
+    }
     return acc;
   }, {} as Record<string, typeof filteredShowtimes>);
 
-  // Get theaters that have showtimes for the selected date
+  // Get theaters that have showtimes for the selected date in the selected location
   const theatersWithShowtimes = theaters?.filter(theater => 
     showtimesByTheater[theater.id]?.length > 0
   ) || [];
@@ -170,8 +174,8 @@ const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
               </CardContent>
             </Card>
 
-            {/* Date Selector */}
-            <DateSelector 
+            {/* Calendar Date Picker */}
+            <CalendarDatePicker 
               selectedDate={selectedDate} 
               onDateSelect={setSelectedDate} 
             />
@@ -183,10 +187,10 @@ const MovieBooking = ({ movie, isOpen, onClose }: MovieBookingProps) => {
             ) : theatersWithShowtimes.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-gray-500">
-                  No showtimes available for {format(selectedDate, 'EEEE, MMMM d, yyyy')}.
+                  No showtimes available for {format(selectedDate, 'EEEE, MMMM d, yyyy')} in {selectedLocation}.
                 </p>
                 <p className="text-sm text-gray-400 mt-2">
-                  Try selecting a different date.
+                  Try selecting a different date or location.
                 </p>
               </div>
             ) : (
