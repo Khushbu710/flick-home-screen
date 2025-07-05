@@ -1,73 +1,58 @@
-# Welcome to your Lovable project
+# 🎟️ BookMyShow-Inspired Web App (GenAI Built)
 
-## Project info
+A responsive, AI-generated movie ticket booking platform inspired by **BookMyShow**. This project was built using **Lovable AI**, and refined to demonstrate a modern web app with real-world UI/UX components.
 
-**URL**: https://lovable.dev/projects/59d26d60-8b1f-406d-97ea-a731e53e64dc
+🔗 **Live Demo**: [lovableproject.com](https://59d26d60-8b1f-406d-97ea-a731e53e64dc.lovableproject.com/#)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 📌 Features
 
-**Use Lovable**
+- 🎞️ Browse movies, showtimes, and available theaters
+- 🧾 Book tickets through an intuitive interface
+- 🌙 Responsive dark/light theme with modern design
+- 🔍 Interactive UI components using shadcn-ui and Tailwind
+- ⚡ Lightning-fast performance via Vite and React
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/59d26d60-8b1f-406d-97ea-a731e53e64dc) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠 Tech Stack
 
-**Use your preferred IDE**
+- **Frontend Framework**: React + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Library**: shadcn/ui
+- **Generated Using**: Lovable (GenAI coding platform)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 Getting Started (Optional for Developers)
 
-Follow these steps:
+To run the project locally:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repo
+git clone https://github.com/your-username/lovable-bookmyshow.git
+cd lovable-bookmyshow
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+## 📄 Project Motivation
+This project was built to explore the capabilities of generative AI in frontend development and demonstrate how powerful tools like Lovable can bootstrap production-ready applications. It also showcases component-based design and responsive layouts suitable for real-world web applications.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📣 Acknowledgements
+UI powered by shadcn/ui
 
-**Use GitHub Codespaces**
+Built using Lovable.dev for GenAI code generation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Inspired by the user experience of BookMyShow
 
-## What technologies are used for this project?
+## 👤 Author
+Khushbu Sharma
+📧 khushbu.sharma7105@gmail.com
+💻 https://github.com/Khushbu710
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/59d26d60-8b1f-406d-97ea-a731e53e64dc) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Open to suggestions 
